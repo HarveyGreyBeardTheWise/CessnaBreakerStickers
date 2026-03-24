@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cessna Breaker Label Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Sidebar ──────────────────────────────────────────────────── -->
+<div id="sidebar">
+
+  <div id="app-header">
+    <div id="app-icon">✈</div>
+    <div>
+      <div id="app-title">Breaker Labels</div>
+      <div id="app-sub">Cessna Panel Generator</div>
+    </div>
+  </div>
+
+  <!-- Image Size -->
+  <div class="panel">
+    <div class="panel-title">Image Size</div>
+    <div class="panel-body">
+      <div class="row">
+        <label for="imgW">Width (in)</label>
+        <input type="number" id="imgW" value="8" min="0.1" max="48" step="0.25">
+      </div>
+      <div class="row">
+        <label for="imgH">Height (in)</label>
+        <input type="number" id="imgH" value="0.75" min="0.1" max="12" step="0.05">
+      </div>
+      <div class="row">
+        <label for="dpi">DPI</label>
+        <input type="number" id="dpi" value="300" min="72" max="1200" step="50">
+      </div>
+      <div class="row">
+        <label for="brkW">Breaker width (in)</label>
+        <input type="number" id="brkW" value="0.5" min="0.05" max="4" step="0.05">
+      </div>
+      <div class="row">
+        <label for="margin">End margins (in)</label>
+        <input type="number" id="margin" value="0.25" min="0" max="4" step="0.05">
+      </div>
+      <div class="row">
+        <label for="topMargin">Top margin (in)</label>
+        <input type="number" id="topMargin" value="0" min="0" max="4" step="0.025">
+      </div>
+      <div class="row">
+        <label for="bottomMargin">Bottom margin (in)</label>
+        <input type="number" id="bottomMargin" value="0" min="0" max="4" step="0.025">
+      </div>
+    </div>
+  </div>
+
+  <!-- Appearance -->
+  <div class="panel">
+    <div class="panel-title">Appearance</div>
+    <div class="panel-body">
+
+      <div class="color-row" id="bgRow">
+        <div class="color-row-top">
+          <span class="field-label">Background</span>
+          <label class="transp-group" for="bgTransparent">
+            <input type="checkbox" id="bgTransparent" class="transp-check" checked>
+            <span class="transp-lbl">Transparent</span>
+          </label>
+        </div>
+        <div class="color-controls">
+          <input type="color" id="bgColor" value="#c8b480">
+          <input type="text"  id="bgHex"   value="#c8b480" class="hex-input">
+        </div>
+      </div>
+
+      <div class="color-row" id="cellRow">
+        <div class="color-row-top">
+          <span class="field-label">Cell fill</span>
+          <label class="transp-group" for="cellTransparent">
+            <input type="checkbox" id="cellTransparent" class="transp-check">
+            <span class="transp-lbl">Transparent</span>
+          </label>
+        </div>
+        <div class="color-controls">
+          <input type="color" id="cellColor" value="#ffffff">
+          <input type="text"  id="cellHex"   value="#ffffff" class="hex-input">
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Text color</label>
+        <input type="color" id="textColor" value="#000000">
+        <input type="text"  id="textHex"   value="#000000" class="hex-input">
+      </div>
+
+      <div class="row">
+        <label>Border color</label>
+        <input type="color" id="brdColor" value="#222222">
+        <input type="text"  id="brdHex"   value="#222222" class="hex-input">
+      </div>
+
+      <div class="row">
+        <label for="brdW">Border width (px)</label>
+        <input type="number" id="brdW" value="2" min="0" max="20" step="0.5">
+      </div>
+
+      <div class="row">
+        <label>Font</label>
+        <input type="hidden" id="font" value="Arial Black">
+        <div class="font-picker">
+          <button class="font-trigger" id="fontTrigger" onclick="toggleFontDropdown(event)">
+            <span class="font-trigger-label" id="fontTriggerLabel" style="font-family:'Arial Black'">Arial Black</span>
+            <span class="font-arrow">▾</span>
+          </button>
+          <div class="font-dropdown" id="fontDropdown"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="pad">Text padding (%)</label>
+        <input type="number" id="pad" value="12" min="0" max="45" step="1">
+      </div>
+
+      <div class="field-stack">
+        <span class="field-stack-label">Text rotation</span>
+        <input type="hidden" id="rotation" value="90">
+        <div class="rot-grid" id="rotGroup">
+          <button class="rot-tile"        data-deg="0"   onclick="setRotation(0)">
+            <span class="rot-icon" style="transform:rotate(0deg)">T</span>
+            <span class="rot-deg">0°</span>
+          </button>
+          <button class="rot-tile"        data-deg="45"  onclick="setRotation(45)">
+            <span class="rot-icon" style="transform:rotate(45deg)">T</span>
+            <span class="rot-deg">45°</span>
+          </button>
+          <button class="rot-tile active" data-deg="90"  onclick="setRotation(90)">
+            <span class="rot-icon" style="transform:rotate(90deg)">T</span>
+            <span class="rot-deg">90°</span>
+          </button>
+          <button class="rot-tile"        data-deg="135" onclick="setRotation(135)">
+            <span class="rot-icon" style="transform:rotate(135deg)">T</span>
+            <span class="rot-deg">135°</span>
+          </button>
+          <button class="rot-tile"        data-deg="180" onclick="setRotation(180)">
+            <span class="rot-icon" style="transform:rotate(180deg)">T</span>
+            <span class="rot-deg">180°</span>
+          </button>
+          <button class="rot-tile"        data-deg="225" onclick="setRotation(225)">
+            <span class="rot-icon" style="transform:rotate(225deg)">T</span>
+            <span class="rot-deg">225°</span>
+          </button>
+          <button class="rot-tile"        data-deg="270" onclick="setRotation(270)">
+            <span class="rot-icon" style="transform:rotate(270deg)">T</span>
+            <span class="rot-deg">270°</span>
+          </button>
+          <button class="rot-tile"        data-deg="315" onclick="setRotation(315)">
+            <span class="rot-icon" style="transform:rotate(315deg)">T</span>
+            <span class="rot-deg">315°</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Breaker List -->
+  <div class="panel" id="breaker-panel">
+    <div class="panel-title">
+      Breakers <span id="b-count" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11px"></span>
+    </div>
+    <div class="panel-body">
+      <div class="list-col-header">
+        <span class="lch-label">Label <span style="color:var(--tx-4);font-weight:400;text-transform:none;letter-spacing:0">(↵ = line break)</span></span>
+        <span style="width:32px"></span>
+      </div>
+      <div id="breaker-list"></div>
+      <button class="btn btn-dashed" onclick="addBreaker()">+ Add Breaker</button>
+      <div class="btn-row">
+        <button class="btn" onclick="loadPreset()">Load Preset</button>
+        <button class="btn" onclick="clearBreakers()">Clear All</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /sidebar -->
+
+<!-- ── Preview area ─────────────────────────────────────────────── -->
+<div id="main">
+  <div id="toolbar">
+    <button class="btn btn-primary" onclick="exportPNG()">&#11015; Export PNG</button>
+    <div id="info"></div>
+  </div>
+  <div id="canvas-wrap">
+    <canvas id="preview"></canvas>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
