@@ -833,6 +833,30 @@ label.btn { cursor: pointer; }
 }
 
 /* ── Help button ────────────────────────────────────────────────── */
+#bmc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 0 14px;
+  height: 34px;
+  background: #FFDD00;
+  color: #000000;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid #000000;
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+  transition: filter var(--ease), transform var(--ease);
+}
+
+#bmc-btn:hover {
+  filter: brightness(0.93);
+  transform: translateY(-1px);
+}
+
 .btn-help {
   margin-left: auto;
   background: transparent;
