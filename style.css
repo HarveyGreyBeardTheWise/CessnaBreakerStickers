@@ -334,6 +334,11 @@ input[type="checkbox"] {
 
 .rot-tile.active .rot-deg { color: var(--accent); }
 
+.rot-tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* ── Font picker ────────────────────────────────────────────────── */
 .font-picker {
   position: relative;
@@ -435,7 +440,7 @@ input[type="checkbox"] {
 }
 
 .list-col-header .lch-label { flex: 1; }
-.list-col-header .lch-gap   { width: 58px; text-align: right; }
+.list-col-header .lch-hint  { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--tx-4); }
 
 #breaker-list {
   display: flex;
@@ -458,6 +463,51 @@ input[type="checkbox"] {
 
 .b-row:hover {
   border-color: var(--bd-default);
+}
+
+.b-row.is-modified {
+  border-color: #d97706;
+  background: rgba(217,119,6,0.05);
+}
+
+.b-row.is-modified:hover {
+  border-color: #b45309;
+}
+
+/* Revert button — invisible until card is modified (keeps grid space always) */
+.b-revert {
+  display: inline-flex;
+  visibility: hidden;
+  pointer-events: none;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 1px solid rgba(217,119,6,0.40);
+  border-radius: var(--r-xs);
+  color: #d97706;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background var(--ease), border-color var(--ease), color var(--ease);
+}
+
+.b-row.is-modified .b-revert {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.b-revert:focus-visible {
+  outline: 2px solid #d97706;
+  outline-offset: 2px;
+}
+
+.b-revert:hover {
+  background: rgba(217,119,6,0.12);
+  border-color: #d97706;
+  color: #b45309;
 }
 
 .b-handle {
@@ -492,9 +542,18 @@ input[type="checkbox"] {
 .b-row.drag-above  { border-top:    2px solid var(--accent); }
 .b-row.drag-below  { border-bottom: 2px solid var(--accent); }
 
-.b-label {
+/* Body column: stacks textarea above controls */
+.b-body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.b-label {
+  width: 100%;
+  box-sizing: border-box;
   background: var(--bg-control);
   border: 1px solid var(--bd-soft);
   border-radius: var(--r-sm);
@@ -515,16 +574,16 @@ input[type="checkbox"] {
   box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
-/* Right-side control grid: labels row + controls row, 3 columns */
+/* Control grid: labels row + controls row, full-width under the textarea */
 .b-controls {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr auto;
   grid-template-rows: auto auto;
-  column-gap: 8px;
+  column-gap: 6px;
   row-gap: 4px;
-  flex-shrink: 0;
   align-items: center;
   justify-items: center;
+  width: 100%;
 }
 
 .b-ctrl-lbl {
@@ -542,6 +601,7 @@ input[type="checkbox"] {
 }
 
 .b-gap-val,
+.b-brkw-val,
 .b-size-val {
   font-size: 10.5px;
   color: var(--tx-3);
@@ -575,9 +635,14 @@ input[type="checkbox"] {
   color: var(--tx-1);
 }
 
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .icon-btn.del:hover {
   background: var(--danger-bg);
-  border-color: rgba(248,113,113,0.45);
+  border-color: rgba(220,38,38,0.40);
   color: var(--danger);
 }
 
@@ -599,6 +664,13 @@ input[type="checkbox"] {
   background: var(--bg-hover);
   color: var(--tx-1);
   border-color: var(--bd-strong);
+}
+
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-dashed:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .btn-primary {
@@ -650,6 +722,18 @@ input[type="checkbox"] {
   min-width: 0;
 }
 
+/* Import/measurements labels that act as buttons */
+label.btn { cursor: pointer; }
+
+/* Measurements toggle — highlighted when checked */
+.meas-toggle-btn input { display: none; }
+.meas-toggle-btn:has(input:checked) {
+  background: #eff6ff;
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 #toolbar {
   padding: 12px 24px;
   background: var(--bg-side);
@@ -665,6 +749,37 @@ input[type="checkbox"] {
   font-variant-numeric: tabular-nums;
   font-family: 'Menlo', 'Consolas', monospace;
   letter-spacing: 0.01em;
+  transition: color var(--ease);
+}
+
+#info.info-overflow {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+#overflow-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: #fef2f2;
+  border-bottom: 2px solid #dc2626;
+  color: #991b1b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#overflow-banner[hidden] { display: none; }
+
+.overflow-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  animation: overflow-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes overflow-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 #canvas-wrap {
@@ -674,8 +789,166 @@ input[type="checkbox"] {
   align-items: center;
   justify-content: center;
   background: var(--bg-app);
-  padding: 48px;
-  background-image: none;
+  padding: 32px;
+}
+
+/* Empty breaker list state */
+.b-empty-state {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--tx-4);
+  font-size: 12px;
+  border: 1.5px dashed var(--bd-soft);
+  border-radius: var(--r-md);
+  line-height: 1.5;
+}
+
+/* Panel title count badge */
+.panel-title-count {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--tx-3);
+  font-size: 11px;
+}
+
+/* Font dropdown keyboard focus */
+.font-option:focus-visible {
+  outline: none;
+  background: var(--bg-hover);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* Unavailable fonts are visually dimmed */
+.font-option.font-unavailable .font-opt-name {
+  opacity: 0.45;
+}
+
+.font-option.font-unavailable::after {
+  content: 'not available';
+  font-size: 10px;
+  color: var(--tx-4);
+  display: block;
+  margin-top: 1px;
+}
+
+/* ── Help button ────────────────────────────────────────────────── */
+.btn-help {
+  margin-left: auto;
+  background: transparent;
+  border-color: var(--bd-default);
+  color: var(--tx-2);
+  font-weight: 600;
+}
+
+.btn-help:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Help modal ─────────────────────────────────────────────────── */
+.help-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  animation: fade-in 150ms ease;
+}
+
+.help-backdrop[hidden],
+.help-modal[hidden] { display: none; }
+
+.help-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  width: min(680px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  background: #ffffff;
+  border-radius: var(--r-lg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  animation: modal-in 180ms ease;
+}
+
+@keyframes fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-in { from { opacity: 0; transform: translate(-50%, -48%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+.help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--bd-soft);
+  flex-shrink: 0;
+}
+
+.help-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tx-1);
+  letter-spacing: -0.02em;
+}
+
+.help-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--bg-elevated);
+  border-radius: var(--r-sm);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--tx-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--ease), color var(--ease);
+}
+
+.help-close:hover { background: var(--bg-hover); color: var(--tx-1); }
+
+.help-body {
+  overflow-y: auto;
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-hover) transparent;
+}
+
+.help-section h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-lt);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--bd-faint);
+}
+
+.help-section p,
+.help-section ul,
+.help-section dl { font-size: 13px; color: var(--tx-2); line-height: 1.65; }
+
+.help-section dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+.help-section dt { font-weight: 600; color: var(--tx-1); white-space: nowrap; padding-top: 1px; }
+.help-section dd { margin: 0; }
+.help-section ul { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+
+.help-section code {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 11.5px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--bd-faint);
+  border-radius: 3px;
+  padding: 1px 4px;
 }
 
 /* Checkerboard transparency indicator */
