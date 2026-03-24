@@ -40,6 +40,14 @@
         <input type="number" id="brkW" value="0.5" min="0.05" max="4" step="0.05">
       </div>
       <div class="row">
+        <label for="defGap">Default gap (in)</label>
+        <input type="number" id="defGap" value="0.15" min="0" max="4" step="0.05">
+      </div>
+      <div class="row">
+        <label for="defCC">Default center to center (in)</label>
+        <input type="number" id="defCC" value="0.65" min="0.05" max="8" step="0.05">
+      </div>
+      <div class="row">
         <label for="margin">End margins (in)</label>
         <input type="number" id="margin" value="0.25" min="0" max="4" step="0.05">
       </div>
@@ -108,11 +116,13 @@
         <label>Font</label>
         <input type="hidden" id="font" value="Arial Black">
         <div class="font-picker">
-          <button class="font-trigger" id="fontTrigger" onclick="toggleFontDropdown(event)">
+          <button type="button" class="font-trigger" id="fontTrigger"
+                  aria-haspopup="listbox" aria-expanded="false"
+                  onclick="toggleFontDropdown(event)">
             <span class="font-trigger-label" id="fontTriggerLabel" style="font-family:'Arial Black'">Arial Black</span>
-            <span class="font-arrow">▾</span>
+            <span class="font-arrow" aria-hidden="true">▾</span>
           </button>
-          <div class="font-dropdown" id="fontDropdown"></div>
+          <div class="font-dropdown" id="fontDropdown" role="listbox" aria-label="Font"></div>
         </div>
       </div>
 
@@ -124,36 +134,36 @@
       <div class="field-stack">
         <span class="field-stack-label">Text rotation</span>
         <input type="hidden" id="rotation" value="90">
-        <div class="rot-grid" id="rotGroup">
-          <button class="rot-tile"        data-deg="0"   onclick="setRotation(0)">
+        <div class="rot-grid" id="rotGroup" role="group" aria-label="Text rotation">
+          <button type="button" class="rot-tile"        data-deg="0"   aria-label="0 degrees"   aria-pressed="false" onclick="setRotation(0)">
             <span class="rot-icon" style="transform:rotate(0deg)">T</span>
             <span class="rot-deg">0°</span>
           </button>
-          <button class="rot-tile"        data-deg="45"  onclick="setRotation(45)">
+          <button type="button" class="rot-tile"        data-deg="45"  aria-label="45 degrees"  aria-pressed="false" onclick="setRotation(45)">
             <span class="rot-icon" style="transform:rotate(45deg)">T</span>
             <span class="rot-deg">45°</span>
           </button>
-          <button class="rot-tile active" data-deg="90"  onclick="setRotation(90)">
+          <button type="button" class="rot-tile active" data-deg="90"  aria-label="90 degrees"  aria-pressed="true"  onclick="setRotation(90)">
             <span class="rot-icon" style="transform:rotate(90deg)">T</span>
             <span class="rot-deg">90°</span>
           </button>
-          <button class="rot-tile"        data-deg="135" onclick="setRotation(135)">
+          <button type="button" class="rot-tile"        data-deg="135" aria-label="135 degrees" aria-pressed="false" onclick="setRotation(135)">
             <span class="rot-icon" style="transform:rotate(135deg)">T</span>
             <span class="rot-deg">135°</span>
           </button>
-          <button class="rot-tile"        data-deg="180" onclick="setRotation(180)">
+          <button type="button" class="rot-tile"        data-deg="180" aria-label="180 degrees" aria-pressed="false" onclick="setRotation(180)">
             <span class="rot-icon" style="transform:rotate(180deg)">T</span>
             <span class="rot-deg">180°</span>
           </button>
-          <button class="rot-tile"        data-deg="225" onclick="setRotation(225)">
+          <button type="button" class="rot-tile"        data-deg="225" aria-label="225 degrees" aria-pressed="false" onclick="setRotation(225)">
             <span class="rot-icon" style="transform:rotate(225deg)">T</span>
             <span class="rot-deg">225°</span>
           </button>
-          <button class="rot-tile"        data-deg="270" onclick="setRotation(270)">
+          <button type="button" class="rot-tile"        data-deg="270" aria-label="270 degrees" aria-pressed="false" onclick="setRotation(270)">
             <span class="rot-icon" style="transform:rotate(270deg)">T</span>
             <span class="rot-deg">270°</span>
           </button>
-          <button class="rot-tile"        data-deg="315" onclick="setRotation(315)">
+          <button type="button" class="rot-tile"        data-deg="315" aria-label="315 degrees" aria-pressed="false" onclick="setRotation(315)">
             <span class="rot-icon" style="transform:rotate(315deg)">T</span>
             <span class="rot-deg">315°</span>
           </button>
@@ -166,18 +176,17 @@
   <!-- Breaker List -->
   <div class="panel" id="breaker-panel">
     <div class="panel-title">
-      Breakers <span id="b-count" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx-3);font-size:11px"></span>
+      Breakers <span id="b-count" class="panel-title-count"></span>
     </div>
     <div class="panel-body">
       <div class="list-col-header">
-        <span class="lch-label">Label <span style="color:var(--tx-4);font-weight:400;text-transform:none;letter-spacing:0">(↵ = line break)</span></span>
-        <span style="width:32px"></span>
+        <span class="lch-label">Label <span class="lch-hint">(↵ = line break)</span></span>
       </div>
       <div id="breaker-list"></div>
-      <button class="btn btn-dashed" onclick="addBreaker()">+ Add Breaker</button>
+      <button type="button" class="btn btn-dashed" onclick="addBreaker()">+ Add Breaker</button>
       <div class="btn-row">
-        <button class="btn" onclick="loadPreset()">Load Preset</button>
-        <button class="btn" onclick="clearBreakers()">Clear All</button>
+        <button type="button" class="btn" onclick="loadPreset()">Load Preset</button>
+        <button type="button" class="btn" onclick="clearBreakers()">Clear All</button>
       </div>
     </div>
   </div>
@@ -187,11 +196,135 @@
 <!-- ── Preview area ─────────────────────────────────────────────── -->
 <div id="main">
   <div id="toolbar">
-    <button class="btn btn-primary" onclick="exportPNG()">&#11015; Export PNG</button>
+    <button type="button" class="btn btn-primary" id="exportBtn" onclick="exportPNG()">&#11015; Export PNG</button>
+    <button type="button" class="btn" id="exportJsonBtn" onclick="exportSettings()">&#11015; Save Settings</button>
+    <label class="btn" id="importJsonBtn" title="Load a previously saved settings file">
+      &#11014; Load Settings
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(this)">
+    </label>
+    <label class="btn meas-toggle-btn" title="Toggle measurement overlay">
+      <input type="checkbox" id="showMeasurements" onchange="render()">
+      &#x1F4CF; Measurements
+    </label>
     <div id="info"></div>
+    <button type="button" class="btn btn-help" id="helpBtn" onclick="openHelp()" title="Help">? Help</button>
+  </div>
+  <div id="overflow-banner" hidden>
+    <span class="overflow-icon">⚠</span>
+    Layout overflows strip width — breakers extend past the right edge.
+    Reduce breaker widths, gaps, or margins, or increase the strip width.
   </div>
   <div id="canvas-wrap">
     <canvas id="preview"></canvas>
+  </div>
+</div>
+
+<!-- ── Help modal ─────────────────────────────────────────────── -->
+<div id="help-backdrop" class="help-backdrop" hidden onclick="closeHelp()"></div>
+<div id="help-modal" class="help-modal" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+  <div class="help-header">
+    <h2 id="help-title">How to Use Breaker Labels</h2>
+    <button type="button" class="help-close" onclick="closeHelp()" aria-label="Close help">×</button>
+  </div>
+  <div class="help-body">
+
+    <div class="help-section">
+      <h3>Overview</h3>
+      <p>This tool generates a printable PNG label strip for the circuit breaker panel in a Cessna aircraft. Configure the strip dimensions and appearance on the left, add your breakers in the list, then export a high-resolution PNG ready for printing.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>Image Size</h3>
+      <dl>
+        <dt>Width / Height (in)</dt>
+        <dd>The physical size of the final printed image in inches. Set these to match the exact space available on your panel.</dd>
+        <dt>DPI</dt>
+        <dd>Dots per inch for the exported PNG. 300 DPI is standard for high-quality printing. Higher values produce larger files with finer detail.</dd>
+        <dt>Breaker width (in)</dt>
+        <dd>The default width of each breaker cell. Typical Cessna breakers are 0.5". This value is applied to all new breakers you add and to any existing breakers that haven't been individually customized.</dd>
+        <dt>Default gap (in)</dt>
+        <dd>The default space between each breaker cell. Adjusting this automatically updates the <em>Default center to center</em> value.</dd>
+        <dt>Default center to center (in)</dt>
+        <dd>The distance from the center of one breaker to the center of the next. Equal to <em>Breaker width + Default gap</em>. Changing this recalculates the gap automatically. Useful when you have a known center-to-center measurement from the physical panel.</dd>
+        <dt>End margins (in)</dt>
+        <dd>Empty space added before the first breaker and after the last breaker.</dd>
+        <dt>Top / Bottom margin (in)</dt>
+        <dd>Vertical padding inside the strip, pushing cell content away from the top and bottom edges.</dd>
+      </dl>
+    </div>
+
+    <div class="help-section">
+      <h3>Appearance</h3>
+      <dl>
+        <dt>Background</dt>
+        <dd>The fill color of the overall strip. Check <strong>Transparent</strong> to export with a transparent background (useful for layering in other software).</dd>
+        <dt>Cell fill</dt>
+        <dd>The fill color inside each individual breaker cell. Check <strong>Transparent</strong> to leave cells unfilled.</dd>
+        <dt>Text color</dt>
+        <dd>The color of the label text drawn inside each cell.</dd>
+        <dt>Border color / Border width</dt>
+        <dd>The color and pixel thickness of the outline drawn around each cell. Set width to 0 to remove borders.</dd>
+        <dt>Font</dt>
+        <dd>The typeface used for all labels. Fonts shown in full opacity are installed on this computer; dimmed fonts are not available and will fall back to a system default.</dd>
+        <dt>Text padding (%)</dt>
+        <dd>How much space to leave between the text and the cell edges, as a percentage of the cell size. Higher values shrink the text.</dd>
+        <dt>Text rotation</dt>
+        <dd>The angle at which labels are drawn inside their cells. 90° (vertical) is the most common choice for narrow breaker strips, letting you read the labels top-to-bottom.</dd>
+      </dl>
+    </div>
+
+    <div class="help-section">
+      <h3>Breaker List</h3>
+      <p>Each row in the list represents one circuit breaker on the strip.</p>
+      <dl>
+        <dt>Label text</dt>
+        <dd>The text printed inside the cell. Press <strong>Enter</strong> (or type <code>\n</code>) to insert a manual line break. Otherwise the app automatically finds the best one- or two-line split to maximize font size.</dd>
+        <dt>Gap</dt>
+        <dd>The space before this specific breaker, overriding the default gap. Use the − / + buttons to adjust in 0.05" steps.</dd>
+        <dt>Width</dt>
+        <dd>The cell width for this specific breaker, overriding the default breaker width. Useful when a single breaker takes more physical space on the panel.</dd>
+        <dt>Size</dt>
+        <dd>A manual font size adjustment (−9 to +9 steps) applied on top of the auto-fitted size. Handy for nudging one label larger or smaller without affecting others.</dd>
+        <dt>↺ Revert</dt>
+        <dd>Appears when a breaker's gap or width differs from the current defaults. Click it to reset that breaker back to the global defaults.</dd>
+        <dt>Reordering</dt>
+        <dd>Drag the <strong>⠿</strong> handle on the left of any breaker card to reorder it within the list.</dd>
+        <dt>Load Preset</dt>
+        <dd>Replaces the current list with a set of common Cessna 172 breaker labels as a starting point.</dd>
+        <dt>Clear All</dt>
+        <dd>Removes all breakers from the list after a confirmation prompt.</dd>
+      </dl>
+    </div>
+
+    <div class="help-section">
+      <h3>Toolbar</h3>
+      <dl>
+        <dt>Export PNG</dt>
+        <dd>Downloads the strip as a full-resolution PNG at the configured DPI. The measurement overlay is never included in the export — only the clean label strip.</dd>
+        <dt>Save Settings</dt>
+        <dd>Downloads all current settings (image size, appearance, and the full breaker list) as a <code>.json</code> file. Use this to save your work and reload it later.</dd>
+        <dt>Load Settings</dt>
+        <dd>Loads a previously saved <code>.json</code> settings file, restoring the complete configuration including all breakers.</dd>
+        <dt>📏 Measurements</dt>
+        <dd>Toggles a dimension overlay above the preview canvas. It shows the total strip width, the center-to-center distance between every adjacent pair of breakers (teal), and the individual gap and cell widths with color-coded labels. Labels that are too narrow to fit inline are lifted above with a leader line.</dd>
+      </dl>
+    </div>
+
+    <div class="help-section">
+      <h3>Overflow Warning</h3>
+      <p>A red banner appears when the total span of your breakers (including gaps and margins) exceeds the configured strip width. To resolve it: reduce breaker widths, reduce gaps, reduce end margins, or increase the strip width.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>Tips</h3>
+      <ul>
+        <li>Use <strong>Save Settings</strong> frequently — the app has no auto-save and your work is lost on page refresh.</li>
+        <li>Enable <strong>Measurements</strong> while designing so you can verify the center-to-center spacing matches your physical panel before printing.</li>
+        <li>Print at 100% scale (no "fit to page") to preserve the exact physical dimensions.</li>
+        <li>For transparent backgrounds, use a PNG-aware application when printing or editing the exported file.</li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
